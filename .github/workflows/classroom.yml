@@ -13,30 +13,17 @@ jobs:
   run-autograding-tests:
     runs-on: ubuntu-latest
     if: github.actor != 'github-classroom[bot]'
-    strategy:
-      matrix:
-        test:
-          - name: test_1
-            command: pytest tests/test_1.py
-            max-score: 10
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run ${{ matrix.test.name }}
-        id: ${{ matrix.test.name }}
+      - name: Run test_1
+        id: test_1
         uses: classroom-resources/autograding-command-grader@v1
         with:
-          test-name: ${{ matrix.test.name }}
+          test-name: test_1
           setup-command: pip install pytest pylint
-          command: ${{ matrix.test.command }}
+          command: pytest tests/test_1.py
           timeout: 10
-          max-score: ${{ matrix.test.max-score }}
-
-      - name: Autograding Reporter
-        uses: classroom-resources/autograding-grading-reporter@v1
-        env:
-          TEST_${{ matrix.test.name }}_RESULTS: ${{ steps[matrix.test.name].outputs.result }}
-        with:
-          runners: ${{ matrix.test.name }}
+          max-score: 10
 
